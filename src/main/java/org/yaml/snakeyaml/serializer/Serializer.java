@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.yaml.snakeyaml.YamlConfig;
+import org.yaml.snakeyaml.Dumper;
 import org.yaml.snakeyaml.emitter.Emitter;
 import org.yaml.snakeyaml.events.AliasEvent;
 import org.yaml.snakeyaml.events.DocumentEndEvent;
@@ -36,7 +36,6 @@ import org.yaml.snakeyaml.resolver.Resolver;
 public class Serializer {
     private Emitter emitter;
     private Resolver resolver;
-    private YamlConfig options;
     private boolean explicitStart;
     private boolean explicitEnd;
     private Integer[] useVersion;
@@ -46,10 +45,9 @@ public class Serializer {
     private int lastAnchorId;
     private Boolean closed;
 
-    public Serializer(Emitter emitter, Resolver resolver, YamlConfig opts) {
+    public Serializer(Emitter emitter, Resolver resolver, Dumper opts) {
         this.emitter = emitter;
         this.resolver = resolver;
-        this.options = opts;
         this.explicitStart = opts.explicitStart();
         this.explicitEnd = opts.explicitEnd();
         this.useVersion = opts.version();
@@ -144,17 +142,14 @@ public class Serializer {
                 String defaultTag = this.resolver.resolve(ScalarNode.class, (String) node
                         .getValue(), false);
                 boolean[] implicit = new boolean[] { false, false };
-                if (!options.explicitTypes()) {
-                    implicit[0] = node.getTag().equals(detectedTag);
-                    implicit[1] = node.getTag().equals(defaultTag);
-                }
+                implicit[0] = node.getTag().equals(detectedTag);
+                implicit[1] = node.getTag().equals(defaultTag);
                 ScalarEvent event = new ScalarEvent(tAlias, node.getTag(), implicit, (String) node
                         .getValue(), null, null, ((ScalarNode) node).getStyle());
                 this.emitter.emit(event);
             } else if (node instanceof SequenceNode) {
-                boolean implicit = !options.explicitTypes()
-                        && (node.getTag().equals(this.resolver.resolve(SequenceNode.class, null,
-                                true)));
+                boolean implicit = (node.getTag().equals(this.resolver.resolve(SequenceNode.class,
+                        null, true)));
                 this.emitter.emit(new SequenceStartEvent(tAlias, node.getTag(), implicit, null,
                         null, ((CollectionNode) node).getFlowStyle()));
                 int indexCounter = 0;
@@ -165,9 +160,8 @@ public class Serializer {
                 }
                 this.emitter.emit(new SequenceEndEvent(null, null));
             } else if (node instanceof MappingNode) {
-                boolean implicit = !options.explicitTypes()
-                        && (node.getTag().equals(this.resolver.resolve(MappingNode.class, null,
-                                true)));
+                boolean implicit = (node.getTag().equals(this.resolver.resolve(MappingNode.class,
+                        null, true)));
                 this.emitter.emit(new MappingStartEvent(tAlias, node.getTag(), implicit, null,
                         null, ((CollectionNode) node).getFlowStyle()));
                 Map<Node, Node> map = (Map<Node, Node>) node.getValue();
