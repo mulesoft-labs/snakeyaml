@@ -160,7 +160,7 @@ public class Serializer {
                     indexCounter++;
                 }
                 this.emitter.emit(new SequenceEndEvent(null, null));
-            } else if (node instanceof MappingNode) {
+            } else { // instance of MappingNode
                 boolean implicit = (node.getTag().equals(this.resolver.resolve(MappingNode.class,
                         null, true)));
                 this.emitter.emit(new MappingStartEvent(tAlias, node.getTag(), implicit, null,

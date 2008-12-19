@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.yaml.snakeyaml.nodes.MappingNode;
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.ScalarNode;
 import org.yaml.snakeyaml.nodes.SequenceNode;
@@ -124,10 +123,8 @@ public class Resolver {
             return DEFAULT_SCALAR_TAG;
         } else if (kind.equals(SequenceNode.class)) {
             return DEFAULT_SEQUENCE_TAG;
-        } else if (kind.equals(MappingNode.class)) {
-            return DEFAULT_MAPPING_TAG;
         }
-        return null;
+        return DEFAULT_MAPPING_TAG;
     }
 
 }
