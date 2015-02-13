@@ -3,7 +3,7 @@ SnakeYAML
 
 ##YAML parser and emitter for Java
 
-This is the official [SnakeYAML] mirror for those who prefer to use GIT.
+This repository is outdated. Please do not use it.
 
 Since the [hg-git] plug-in does not allow to easily merge commits between the repositopries, this mirror will be closed.
 The details are here:
